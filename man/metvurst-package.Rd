@@ -14,7 +14,7 @@ Package: \tab metvurst\cr
 Type: \tab Package\cr
 Version: \tab 1.0\cr
 Date: \tab 2013-02-17\cr
-License: \tab What license is it under?\cr
+License: \tab GNU GPL v3\cr
 }
 ~~ An overview of how to use the package, including the most important functions ~~
 }

@@ -1,7 +1,7 @@
 \name{strip}
 \alias{strip}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
+\title{create hour ~ day heatmaps of environmental data
 %%  ~~function to do ... ~~
 }
 \description{

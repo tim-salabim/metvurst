@@ -1,7 +1,7 @@
 \name{windContours}
 \alias{windContours}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
+\title{create hour ~ wind direction plots including hourly wind speed boxplot
 %%  ~~function to do ... ~~
 }
 \description{

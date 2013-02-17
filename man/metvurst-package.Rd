@@ -2,9 +2,7 @@
 \alias{metvurst-package}
 \alias{metvurst}
 \docType{package}
-\title{
-What the package does (short line)
-~~ package title ~~
+\title{meteorological visualistion utilities using R for science and teaching
 }
 \description{
 More about what it does (maybe more than one line)

@@ -1,7 +1,7 @@
 \name{uv2wdws}
 \alias{uv2wdws}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
+\title{helper function to cenvert u & v wind components to wind direction and speed
 %%  ~~function to do ... ~~
 }
 \description{

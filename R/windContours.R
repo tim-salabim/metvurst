@@ -101,7 +101,7 @@ windContours <- function (hour = hour,
                       as.double(do.breaks(cpl$ylim, 
                                           ncol(z) - 1)),
                       z, levels = as.double(zlevs.fill), 
-                      col = col))
+                      col = col)
     else NULL
     if (isTRUE(fill.cont)) 
       .filled.contour(as.double(do.breaks(cpl$xlim, 
@@ -109,7 +109,7 @@ windContours <- function (hour = hour,
                       as.double(do.breaks(cpl$ylim, 
                                           ncol(z) - 1)),
                       z, levels = as.double(seq(0,0.2,0.1)), 
-                      col = gapcolor))
+                      col = gapcolor)
     else NULL
     #add contour lines
     if (isTRUE(contours)) 

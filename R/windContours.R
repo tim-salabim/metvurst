@@ -51,7 +51,8 @@ windContours <- function (hour = hour,
   tab.wd_smooth <- image.smooth(tab.wd, theta = smooth.contours, 
                                 xwidth = 0, ywidth = 0)
 
-  freq.wd <- matrix(prop.table(tab.wd_smooth$z,2)[, 24:1]*100,nrow=36,ncol=24)
+  freq.wd <- matrix(prop.table(tab.wd_smooth$z,2)[, 24:1]*100,
+                    nrow=36,ncol=24)
 
   tab.add <- if (missing(add.var)) tab.wd else
     xtabs(add.var ~ dircat + hour) / tab.wd
@@ -60,7 +61,8 @@ windContours <- function (hour = hour,
                                  xwidth = 0, ywidth = 0)
   
   mat.add <- if (missing(add.var)) 
-    matrix(prop.table(tab.add_smooth$z, 2)[, 24:1] * 100, nrow = 36, ncol = 24) else
+    matrix(prop.table(tab.add_smooth$z, 2)[, 24:1] * 100, 
+           nrow = 36, ncol = 24) else
       tab.add_smooth$z[, 24:1]
   print(str(tab.add_smooth$z))
   
@@ -94,20 +96,20 @@ windContours <- function (hour = hour,
                 log = "", xaxs = "i", yaxs = "i")
     # paint the color contour regions
     if (isTRUE(fill.cont)) 
-      .Internal(filledcontour(as.double(do.breaks(cpl$xlim, 
-                                                  nrow(z) - 1)),
-                              as.double(do.breaks(cpl$ylim, 
-                                                  ncol(z) - 1)),
-                              z, levels = as.double(zlevs.fill), 
-                              col = col))
+      .filled.contour(as.double(do.breaks(cpl$xlim, 
+                                          nrow(z) - 1)),
+                      as.double(do.breaks(cpl$ylim, 
+                                          ncol(z) - 1)),
+                      z, levels = as.double(zlevs.fill), 
+                      col = col))
     else NULL
     if (isTRUE(fill.cont)) 
-      .Internal(filledcontour(as.double(do.breaks(cpl$xlim, 
-                                                  nrow(z) - 1)),
-                              as.double(do.breaks(cpl$ylim, 
-                                                  ncol(z) - 1)),
-                              z, levels = as.double(seq(0,0.2,0.1)), 
-                              col = gapcolor))
+      .filled.contour(as.double(do.breaks(cpl$xlim, 
+                                          nrow(z) - 1)),
+                      as.double(do.breaks(cpl$ylim, 
+                                          ncol(z) - 1)),
+                      z, levels = as.double(seq(0,0.2,0.1)), 
+                      col = gapcolor))
     else NULL
     #add contour lines
     if (isTRUE(contours)) 
@@ -133,27 +135,32 @@ windContours <- function (hour = hour,
   out.fill <- levelplot(mat.add, 
                         panel = function(fill.cont, contours, ...) {
                           grid.rect(gp=gpar(col=NA, fill=gapcolor))
-                          panel.filledcontour(fill.cont = T, contours = F, ...)
+                          panel.filledcontour(fill.cont = T, 
+                                              contours = F, ...)
                           },
                         col.regions = cols,
                         plot.args = list(newpage = FALSE))
  
   out.conts <- levelplot(freq.wd, 
                          panel = function(fill.cont, contours, ...) {
-                           panel.filledcontour(fill.cont = F, contours = T, ...)
+                           panel.filledcontour(fill.cont = F, 
+                                               contours = T, ...)
                            },
                            col.regions = cols,
                            plot.args = list(newpage = FALSE),
                          colorkey = list(space = "top", at = zlevs.fill, 
                                          width = 1, height = 0.75, 
-                                         labels = list(at = seq(zlevs.fill[1],
-                                                                zlevs.fill[length(zlevs.fill)],
-                                                                spacing),
-                                                       cex = 0.7),
+                                         labels = 
+                                           list(at = 
+                                                  seq(zlevs.fill[1],
+                                                      zlevs.fill[length(zlevs.fill)],
+                                                      spacing),
+                                                cex = 0.7),
                                          col = cols))
   
-  out.speed <- bwplot(rev(hour) ~ ws, xlim = c(-0.25, speedlim), ylim = 24.5:0.5, 
-                      scales = list(x = list(draw = T), y=list(draw = F)), 
+  out.speed <- bwplot(rev(hour) ~ ws, xlim = c(-0.25, speedlim), 
+                      ylim = 24.5:0.5, scales = list(x = list(draw = T), 
+                                                     y=list(draw = F)), 
                       xlab = NULL, ylab = NULL)
   
   out.blank <- xyplot(hour ~ ws, xlim = c(-0.5, speedlim), ylim = 24.5:0.5, 

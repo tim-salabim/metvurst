@@ -64,7 +64,6 @@ windContours <- function (hour = hour,
     matrix(prop.table(tab.add_smooth$z, 2)[, 24:1] * 100, 
            nrow = 36, ncol = 24) else
       tab.add_smooth$z[, 24:1]
-  print(str(tab.add_smooth$z))
   
   zlevs.fill <- if (missing(keyint)) seq(floor(min(mat.add)), 
                                          ceiling(max(mat.add)),

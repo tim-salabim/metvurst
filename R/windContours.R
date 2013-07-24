@@ -11,8 +11,10 @@ windContours <- function (hour = hour,
                           labels = T,
                           stripname = "",
                           keytitle = "",
-                          keyint = c(0, 15),
-                          keyspacing = 1,
+                          contint,
+                          contspacing = 1,
+                          levint,
+                          levspacing = 1,
                           ncuts = 0.1,
                           gapcolor = "grey50",
                           colour = brewer.pal(9, "Greys"),
@@ -65,15 +67,17 @@ windContours <- function (hour = hour,
            nrow = 36, ncol = 24) else
       tab.add_smooth$z[, 24:1]
   
-  zlevs.fill <- if (missing(keyint)) seq(floor(min(mat.add)), 
+  #if (missing(add.var)) levint <- contint
+  
+  zlevs.fill <- if (missing(levint)) seq(floor(min(mat.add)), 
                                          ceiling(max(mat.add)),
                                          by = ncuts)
-                  else seq(keyint[1], keyint[2], by = ncuts)
+                  else seq(levint[1], levint[2], by = ncuts)
   
-  zlevs.conts <- if (missing(keyint)) seq(floor(min(freq.wd)), 
-                                          ceiling(max(freq.wd)),
-                                          by = spacing)
-                  else seq(keyint[1], keyint[2], by = spacing)
+  zlevs.conts <- if (missing(contint)) seq(floor(min(freq.wd)), 
+                                           ceiling(max(freq.wd)),
+                                           by = spacing)
+                  else seq(contint[1], contint[2], by = spacing)
   
   panel.filledcontour <- function(x, y, z, subscripts, at, fill.cont = T,
                                   col.regions = cols, 

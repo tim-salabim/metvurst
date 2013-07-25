@@ -48,10 +48,16 @@ windContours(hour = hour, wd = wd, ws = ws, add.var, smooth.contours = 1.2, smoo
   \item{keytitle}{
 %%     ~~Describe \code{keytitle} here~~
 }
-  \item{keyint}{
+  \item{contint}{
 %%     ~~Describe \code{keyint} here~~
 }
-  \item{keyspacing}{
+  \item{contspacing}{
+%%     ~~Describe \code{keyspacing} here~~
+}
+  \item{levint}{
+%%     ~~Describe \code{keyspacing} here~~
+}
+  \item{levspacing}{
 %%     ~~Describe \code{keyspacing} here~~
 }
   \item{ncuts}{

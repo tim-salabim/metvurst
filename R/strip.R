@@ -74,21 +74,11 @@ strip <- function(x,
   df <- data.frame(x, date, cond)
   condims <- as.character(unique(cond))
   condims <- subset(condims, condims != "" | condims != NA)
-  years <- substr(df$date, 1, 4)
-
-  uniyears <- unique(years)
-  
-  df$years <- years
 
   minx <- if (missing(range)) min(na.exclude(df$x)) else range[1]
   maxx <- if (missing(range)) max(na.exclude(df$x)) else range[2]
 
-  #print(condims[2])
-  xlist <- split(df, df$years, drop = T)
-  xlist <- sapply(seq(xlist), function(i) {
-    split(xlist[[i]], xlist[[i]]$cond, drop = T)
-  }
-                  )
+  xlist <- split(df, df$cond, drop = T)
   
   ls <- lapply(seq(xlist), function(i) {
 
@@ -113,7 +103,8 @@ strip <- function(x,
     strip_z <- matrix(NA, nrow = 25, ncol = length(unique(as.Date(tseries))))
 
     date_x <- as.Date(date)
-    hour_x <- ifelse(hour < 10, paste("0", hour, sep = ""), as.character(hour))
+    hour_x <- ifelse(hour < 10, paste("0", hour, sep = ""), 
+                     as.character(hour))
     datetime_x <- paste(date_x, hour_x, sep = " ")
     datetime_x <- paste(datetime_x, "00", sep = ":")
 
@@ -133,8 +124,10 @@ strip <- function(x,
     xat <- seq.Date(as.Date(date_from), as.Date(date_to), by = "month")
     xat <- as.integer(julian(xat, origin = as.Date(origin))) + 15
     
+    clr <- colorRampPalette(colour)(1000)
+    
     levelplot(t(strip_z), ylim = c(24.5, -0.5), 
-              col.regions = colour,
+              col.regions = clr,
               strip = F, ylab = "Hour of day", xlab = NULL, asp = "iso",
               at = seq(minx, maxx, 0.1),
               strip.left = strip.custom(
@@ -170,7 +163,7 @@ strip <- function(x,
   out <- update(out, scales = list(y = list(rot = list(0, 0)), tck = c(0, 0)),
                 ylim = c(24.5, -0.5))
 
-  ifelse(length(ls) > 1, print(out), print(out2))
+  ifelse(length(ls) > 1, return(out), return(out2))
   
   ## revert system local time zone setting to original
   Sys.setenv(TZ = Old.TZ)

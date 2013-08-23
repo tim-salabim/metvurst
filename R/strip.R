@@ -50,12 +50,6 @@ strip <- function(x,
 ##
 ################################################################################
 
-  cat("\n",
-      "Module   :  strip", "\n",
-      "Author   :  Tim Appelhans <tim.appelhans@gmail.com>, Thomas Nauss", "\n",
-      "Version  :  2012-01-06", "\n",
-      "License  :  GNU GPLv3, see http://www.gnu.org/licenses/", "\n")
-  
 ########## FUNCTION BODY #######################################################
   
   ## load packages needed (produce error message if not installed)

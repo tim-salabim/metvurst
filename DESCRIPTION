@@ -1,9 +1,9 @@
 Package: metvurst
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
-Date: 2013-02-17
+Title: meteorological visualisation untilities using R for science and teaching
+Version: 0.0.1
+Date: 2013-08-30
 Author: Tim Appelhans
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Description: a bunch of functions for plotting atmospheric (meteorological and climatological) data
+License: lGPL (>= 3)

@@ -5,6 +5,7 @@ strip <- function(x,
                   cond = rep(" ", length(x)),
                   arrange = c("long", "wide"),
                   colour = rev(brewer.pal(11, "Spectral")),
+                  n.col.levs = 1000,
                   ...) {
   
 ################################################################################
@@ -118,7 +119,7 @@ strip <- function(x,
     xat <- seq.Date(as.Date(date_from), as.Date(date_to), by = "month")
     xat <- as.integer(julian(xat, origin = as.Date(origin))) + 15
     
-    clr <- colorRampPalette(colour)(1000)
+    clr <- colorRampPalette(colour)(n.col.levs)
     
     levelplot(t(strip_z), ylim = c(24.5, -0.5), 
               col.regions = clr,

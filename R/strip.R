@@ -4,7 +4,7 @@ strip <- function(x,
                   range,
                   cond = rep(" ", length(x)),
                   arrange = c("long", "wide"),
-                  colour = rev(brewer.pal(11, "Spectral")),
+                  colour = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
                   n.col.levs = 1000,
                   ...) {
   
@@ -74,7 +74,7 @@ strip <- function(x,
   maxx <- if (missing(range)) max(na.exclude(df$x)) else range[2]
 
   xlist <- split(df, df$cond, drop = T)
-  
+
   ls <- lapply(seq(xlist), function(i) {
 
     date <- as.character(xlist[[i]]$date)
@@ -98,8 +98,7 @@ strip <- function(x,
     strip_z <- matrix(NA, nrow = 25, ncol = length(unique(as.Date(tseries))))
 
     date_x <- as.Date(date)
-    hour_x <- ifelse(hour < 10, paste("0", hour, sep = ""), 
-                     as.character(hour))
+    hour_x <- sprintf("%02.f", hour)
     datetime_x <- paste(date_x, hour_x, sep = " ")
     datetime_x <- paste(datetime_x, "00", sep = ":")
 
@@ -119,7 +118,7 @@ strip <- function(x,
     xat <- seq.Date(as.Date(date_from), as.Date(date_to), by = "month")
     xat <- as.integer(julian(xat, origin = as.Date(origin))) + 15
     
-    clr <- colorRampPalette(colour)(n.col.levs)
+    clr <- colour(n.col.levs)
     
     levelplot(t(strip_z), ylim = c(24.5, -0.5), 
               col.regions = clr,

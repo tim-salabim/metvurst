@@ -11,6 +11,7 @@ windContours <- function (hour = hour,
                           labels = T,
                           stripname = "",
                           keytitle = "",
+                          key.spacing = 2,
                           contint,
                           contspacing = 1,
                           levint,
@@ -157,7 +158,7 @@ windContours <- function (hour = hour,
                                            list(at = 
                                                   seq(zlevs.fill[1],
                                                       zlevs.fill[length(zlevs.fill)],
-                                                      spacing),
+                                                      key.spacing),
                                                 cex = 0.7),
                                          col = cols))
   

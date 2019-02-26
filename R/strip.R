@@ -81,7 +81,7 @@ strip <- function(x,
     x <- xlist[[i]]$x
     origin <- paste(substr(date[1], 1, 4), "01-01", sep = "-")
     unldate <- lapply(as.POSIXlt(date), "unlist")
-    hour <- unldate$hour   
+    hour <- sapply(seq(unldate), function(j) unldate[[j]][["hour"]])   
 
     ## calculate different times objects
     juldays <- as.Date(date, origin = as.Date(origin))

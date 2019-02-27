@@ -1,9 +1,20 @@
 Package: metvurst
 Type: Package
-Title: meteorological visualisation untilities using R for science and teaching
+Title: Meteorological Visualisation Utilities Using R (for Science and Teaching)
 Version: 0.0.1
-Date: 2013-08-30
+Date: 2019-02-27
 Author: Tim Appelhans
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
 Description: a bunch of functions for plotting atmospheric (meteorological and climatological) data
-License: lGPL (>= 3)
+License: MIT + file LICENSE
+Imports:
+  lattice,
+  latticeExtra,
+  grid,
+  reshape,
+  plyr,
+  RColorBrewer,
+  fields,
+  abind,
+  gridBase
+RoxygenNote: 6.1.0

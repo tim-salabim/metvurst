@@ -21,13 +21,6 @@ windContours <- function (hour = hour,
                           colour = brewer.pal(9, "Greys"),
                           ...) {
   
-  
-  stopifnot(require("latticeExtra"))
-  stopifnot(require("fields"))
-  stopifnot(require("abind"))
-  stopifnot(require("gridBase"))
-  stopifnot(require("RColorBrewer"))
-  
   cols <- colorRampPalette(colour)
   
   dircat_s <- ordered(ceiling(wd/10), levels=1:36, labels=1:36)

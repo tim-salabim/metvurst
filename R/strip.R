@@ -1,3 +1,30 @@
+#' Visualise large amounts of hourly data as yearly heatmaps
+#'
+#' @description
+#' Produces a heatmap display of hourly time series data showing hour of day on
+#' the y-axis and day-of-year in the x-axis
+#'
+#' @param x the variable to be plotted.
+#' @param date the time series variable to be used for plotting. Needs to be 
+#'   YYYY-MM-DD HH:MM format
+#' @param fun the function to be used in case the time series is higher resolution 
+#'   than hourly.
+#' @param range the range of x to be plotted. Values outside this range will not
+#'   be plotted.
+#' @param cond the conditioning variable to be used for creating the various strips.
+#'   Usually the year. If not supplied, year will be used by default.
+#' @param arrange 'long' (the default) will render all strips in one column.
+#'   'wide' will render things depending on device size.
+#' @param colour the colour palette to be used for the heatmap.
+#' @param n.col.levs the number of colour levels to interpolate to. 
+#'   Increase this if the colour palette does not span all data values.
+#' @param start the start date of the time series to plot. Only relevant for short
+#'   time periods (i.e. sub-year).
+#' @param end the end of the time series to plot. Corresponding to \code{start}.
+#' 
+#' @export strip
+#' @name strip
+#'
 strip <- function(x, 
                   date,
                   fun = mean,
@@ -6,69 +33,21 @@ strip <- function(x,
                   arrange = c("long", "wide"),
                   colour = colorRampPalette(rev(brewer.pal(11, "Spectral"))),
                   n.col.levs = 1000,
+                  start,
+                  end,
                   ...) {
   
-################################################################################
-##  
-##  This program plots meteorological parameters as
-##  a function of time of day (y-axis) and day of year (x-axis). Values are
-##  colour shaded from minimum to maximum. It is possible to supply a
-##  conditioning variable (as this function uses trellis plotting).
-##  NOTE: observations must be hourly or higher frequency!
-##  
-##  parameters are as follows:
-##  
-##  x (numeric):          Object to be plotted (e.g. temperature).
-##  date (character):     Date(time) of the observations.
-##                        Format must be 'YYYY-MM-DD hh:mm(:ss)'
-##  fun (default mean):   The function to be used for aggregation to hourly 
-##                        observations (if original is of higher fequency).
-##  cond (factor):        Conditioning variable.
-##	arrange (character):  One of "wide" or "long". For plot layout.
-##  colour (character):   a vector of color names.
-##  ...                   Further arguments to be passed to levelplot
-##                        (see ?lattice::leveplot for options).
-##
-################################################################################
-##
-##  Copyright (C) 2012 Tim Appelhans, Thomas Nauss
-##
-##  This program is free software: you can redistribute it and/or modify
-##  it under the terms of the GNU General Public License as published by
-##  the Free Software Foundation, either version 3 of the License, or
-##  (at your option) any later version.
-##
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-##  GNU General Public License for more details.
-##
-##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-##
-##  Please send any comments, suggestions, criticism, or (for our sake) bug
-##  reports to tim.appelhans@gmail.com
-##
-################################################################################
-
-########## FUNCTION BODY #######################################################
-  
-  ## load packages needed (produce error message if not installed)
-  stopifnot(require(latticeExtra))
-  stopifnot(require(grid))
-  stopifnot(require(reshape))
-  stopifnot(require(plyr))
-  stopifnot(require(RColorBrewer))
-
-
   ## set system locale time zone to "UTC" for time handling w/out
   ## daylight saving - save current (old) time zone setting
   Old.TZ <- Sys.timezone()
   Sys.setenv(TZ = "UTC")
   
+  st_missing = missing(start)
+  nd_missing = missing(end)
+  
   df <- data.frame(x, date, cond)
   condims <- as.character(unique(cond))
-  condims <- subset(condims, condims != "" | condims != NA)
+  condims <- subset(condims, condims != "" | !is.na(condims))
 
   minx <- if (missing(range)) min(na.exclude(df$x)) else range[1]
   maxx <- if (missing(range)) max(na.exclude(df$x)) else range[2]
@@ -79,7 +58,11 @@ strip <- function(x,
 
     date <- as.character(xlist[[i]]$date)
     x <- xlist[[i]]$x
-    origin <- paste(substr(date[1], 1, 4), "01-01", sep = "-")
+    if (st_missing) {
+      origin <- paste(substr(date[1], 1, 4), "01-01", sep = "-")
+    } else {
+      origin = start
+    }
     unldate <- lapply(as.POSIXlt(date), "unlist")
     hour <- sapply(seq(unldate), function(j) unldate[[j]][["hour"]])   
 
@@ -90,7 +73,11 @@ strip <- function(x,
     ## create regular time series for year of origin
     date_from <- as.POSIXct(origin)
     year <- substr(origin, 1, 4)
-    date_to <- as.POSIXct(paste(year, "12-31", sep = "-"))
+    if (nd_missing) {
+      date_to <- as.POSIXct(paste(year, "12-31", sep = "-"))
+    } else {
+      date_to = as.POSIXct(end)
+    }
     deltat <- 60 * 60
     tseries <- seq(from = date_from, to = date_to, 
                    by = deltat)
@@ -120,30 +107,34 @@ strip <- function(x,
     
     clr <- colour(n.col.levs)
     
-    levelplot(t(strip_z), ylim = c(24.5, -0.5), 
-              col.regions = clr,
-              strip = F, ylab = "Hour of day", xlab = NULL, asp = "iso",
-              at = seq(minx, maxx, 0.1),
-              strip.left = strip.custom(
-                bg = "black", factor.levels = toupper(condims),
-                par.strip.text = list(col = "white", font = 2, cex = 0.8)),
-              as.table = T, cuts = 200, between = list(x = 0, y = 0),
-              scales = list(x = list(at = xat, labels = xlabs),
-                            y = list(at = c(18, 12, 6))),
-              colorkey = list(space = "top", width = 1, height = 0.7,
-                              at = seq(minx, maxx, 0.1)), 
-              panel = function(x, ...) {
-                grid.rect(gp=gpar(col=NA, fill="grey50"))
-                panel.levelplot(x, ...)
-                panel.xblocks(xblockx, y = xbar, height = unit(1, "native"),
-                              col = c("black", "white"), block.y = -0.5,
-                              border = "black", last.step = 1.25, lwd = 0.3)
-                
-                panel.abline(h = c(6, 18), lty = 2, lwd = 0.5, col = "grey90")
-              },  
-              ...)
+    lattice::levelplot(t(strip_z), ylim = c(24.5, -0.5), 
+                       col.regions = clr,
+                       strip = F, ylab = "Hour of day", xlab = NULL, asp = "iso",
+                       at = seq(minx, maxx, 0.1),
+                       strip.left = lattice::strip.custom(
+                         bg = "black", factor.levels = toupper(condims),
+                         par.strip.text = list(col = "white", font = 2, cex = 0.8)),
+                       as.table = T, cuts = 200, between = list(x = 0, y = 0),
+                       scales = list(x = list(at = xat, labels = xlabs),
+                                     y = list(at = c(18, 12, 6))),
+                       colorkey = list(space = "top", width = 1, height = 0.7,
+                                       at = seq(minx, maxx, 0.1)), 
+                       panel = function(x, ...) {
+                         grid::grid.rect(gp = grid::gpar(col=NA, fill="grey50"))
+                         lattice::panel.levelplot(x, ...)
+                         latticeExtra::panel.xblocks(
+                           xblockx, y = xbar, height = grid::unit(1, "native"),
+                           col = c("black", "white"), block.y = -0.5,
+                           border = "black", last.step = 1.25, lwd = 0.3
+                         )
+                         
+                         lattice::panel.abline(
+                           h = c(6, 18), lty = 2, lwd = 0.5, col = "grey90"
+                         )
+                       },  
+                       ...)
   })
-
+  
   out <- ls[[1]]
   out2 <- out
   if (length(ls) > 1) {
